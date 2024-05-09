@@ -1,0 +1,122 @@
+import java.util.*;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
+ class Bus{
+    private int busNum;
+    private boolean AC;
+    private int capacity;
+    private String driverName;
+    
+    Bus(int num,boolean ac,int c,String name){
+        this.busNum = num;
+        this.AC = ac;
+        this.capacity = c;
+        this.driverName = name;
+        
+    }
+    public int getBusNum(){
+        return busNum;
+    }
+    public boolean isAC(){
+        return AC;
+    }
+    public void setAC(boolean  n){
+        AC = n;
+    }
+    public String getDriverName(){
+        return driverName;
+    }
+    public void setDriverName(String n){
+        driverName = n;
+    }
+    public int getCapacity(){
+        return capacity;
+    }
+    public void setCapacity(int n){
+        capacity = n;
+    }
+    public void busInfo(){
+        System.out.println("Bus num " + busNum + " Ac "+ AC + " Capacity "+ capacity + " Driver name "+ driverName);
+    }
+    
+}
+ 
+class Booking{
+    String passengerName;
+    int busNum;
+    Date date;
+    
+    Booking(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter passenger Name: ");
+        passengerName = sc.next();
+        System.out.println("Enter bus number: ");
+        busNum = sc.nextInt();
+        System.out.println("Enter Date (dd-MM-yyyy):");
+        String dateInput = sc.next();
+       SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		
+		try {
+			date = dateFormat.parse(dateInput);
+		} catch (ParseException e) {
+			System.out.println("Invalis date format.please enter date in dd-MM-yyyy format.");
+		}
+		
+        
+    }
+        
+        public  boolean isAvailable( ArrayList<Booking> bookings, ArrayList<Bus> buses){
+               int capacity=0;
+               for(Bus bus:buses){
+                   if(bus.getBusNum()==busNum)
+                      capacity = bus.getCapacity();
+                    
+               }
+               
+               int booked =0;
+               for(Booking b:bookings){
+                   if(b.busNum == busNum && b.date.equals(date)){
+                       booked++;
+                   }
+               }
+               
+               return booked<capacity?true:false;
+        }     
+}
+
+public class Main
+{
+	public static void main(String[] args) {
+	    
+	    // Creating a list of objects fo buses
+	    
+	    ArrayList<Bus> buses = new ArrayList<Bus>();
+	    ArrayList<Booking> bookings = new ArrayList<Booking>();
+	    buses.add(new Bus(1,true,45,"Arun"));
+	    buses.add(new Bus(2,false,65,"Dinesh"));
+	    buses.add(new Bus(3,true,75,"Ram"));
+	    buses.add(new Bus(4,true,55,"Aravind"));
+	    
+	    for(Bus b: buses){
+	        b.busInfo();
+	    }
+	    
+	    //To display whether to book another ticket or end the Booking
+	 
+	    int userOption =1 ;
+	    Scanner sc = new Scanner(System.in);
+	    while(userOption==1){
+		   System.out.println("Enter 1 to book and 2 to end the booking");
+		    userOption = sc.nextInt();
+		    if(userOption==1){
+		        Booking booking = new Booking();
+		        if(booking.isAvailable(bookings,buses)){
+		         bookings.add(booking);
+                 System.out.print("Booking confirmed");
+		        }else{
+		         System.out.print("Bus is full.... try another bus or date");}
+		    }
+	    }
+	}
+}
